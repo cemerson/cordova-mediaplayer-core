@@ -10,7 +10,7 @@ The core functionality behind the "[Cordova-MediaPlayer](dfdf)" project.
 To use "Cordova-MediaPlayer" in your Cordova app project:
 
 Add following to your index.html <head>
-   
+
     <link rel="stylesheet" type="text/css" href="js/cordova-mediaplayer/cordova-mediaplayer.css" />
 
 Add following to your index.html <body>
@@ -18,7 +18,11 @@ Add following to your index.html <body>
     <div id="cordova_media_player"></div>
     <script type="text/javascript" src="js/cordova-mediaplayer/cordova-mediaplayer.js"></script>
 
-Call the following methods as needed:
+Call this method on your body load (or similar) event:
+
+    setupCordovaMediaPlayer();
+
+Then call the following methods as needed:
 
     initMediaPlayerForAudio(audioTtleText,audioPath,audioThumbPath,audioDescriptionText);
     initMediaPlayerForVideo(videoTtleText,videoPath,videoThumbPath,videoDescriptionText);
