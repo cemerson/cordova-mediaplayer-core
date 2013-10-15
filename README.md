@@ -24,8 +24,29 @@ Call this method on your body load (or similar) event:
 
 Then call the following methods as needed:
 
-    initMediaPlayerForAudio(audioTtleText,audioPath,audioThumbPath,audioDescriptionText);
-    initMediaPlayerForVideo(videoTtleText,videoPath,videoThumbPath,videoDescriptionText);
+    initMediaPlayerForAudio() or initMediaPlayerForVideo()
+
+Examples:
+
+    initMediaPlayerForVideo("VIDEO: Remote Example (HTTP://)",
+                            "http://www.mysite.com/video.mp4",
+                            "http://www.mysite.com/video_thumb.jpg",
+                            "The greatest online video ever.");
+
+    initMediaPlayerForVideo("VIDEO: Local Example (FILE:\\\\)",
+                            "example-media/example_video.mp4",
+                            "example-media/example_video.png",
+                            "The greatest offline video ever.");
+
+    initMediaPlayerForAudio("AUDIO: Remote Example (HTTP://)",
+                            "http://www.mysite.com/example.mp3",
+                            "http://www.mysite.com/thumb.jpg",
+                            "The greatest online audio ever.");
+
+    initMediaPlayerForAudio("AUDIO: : Local Example (FILE:\\\\)",
+                            "example-media/example_audio.mp3",
+                            "example-media/example_audio.jpg",
+                            "The greatest offline audio ever.");
 
 Confirm you have the related "[common/js](https://github.com/cemerson/common)" repo loaded in your project as well
 
