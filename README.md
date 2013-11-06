@@ -1,6 +1,17 @@
 cordova-mediaplayer-core
 ========================
 
+# Updates
+
+20131106:
+ - Stripped down the CSS to just the bare essentials
+ - Add some parameters to the setupCordovaMediaPlayer() method: width, height, default title/description/thumbnail
+ - Added a new file for css customization example/abstraction: (cordova-mediaplayer-style.css)[https://github.com/cemerson/cordova-mediaplayer-core/blob/master/cordova-mediaplayer-theme.css]
+ - Added few more 'callback' type methods (see "Optional Methods" section below)
+ - Updated how video playback on device works - so the play/pause button should work better now after video is dismissed
+ - ...
+ 
+
 # Summary
 
 The core functionality behind the "[Cordova-MediaPlayer](https://github.com/cemerson/Cordova-MediaPlayer)" project.
