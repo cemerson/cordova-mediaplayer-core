@@ -8,11 +8,11 @@ var currentMediaAlreadyLoaded = false;    // ...
 var currentMediaPlaying = false;          // ...
 var delayedAudioPlaybackTimeout;          // ...
 var delayedVideoPlaybackInterval;
+var cmpHeight, cmpWidth;
 
 // unused for now:
 // var videoFileExt = "m4v"; // iOS
 // if(isMobile.Android()) videoFileExt = "mp4";
-
 
 
 /* ===================== AUDIO SPECIFIC STUFF ===================== */
@@ -37,18 +37,14 @@ function playAudio(src) {
     // create/init [audioElement]
     if(useCordovaMediaElement){
       // (Cordova MEDIA element)
-      // ANDROID: remove the [sdcard/] prefix to local file if exists
-      // if(src.toLowerCase().indexOf('sdcard/',0) > -1){
       audioElement = new Media(src, onSuccess, onError);
     }else{
       // (HTML5 Audio)
-      // var audioSrcNoQueryString = src.split("?")[0];
-      // audioElement = new Audio(audioSrcNoQueryString);
       audioElement = document.getElementById("app_audio");
     }
 
-    // alert('calling first .play() on audio...');
     audioElement.play();
+
 
   }catch(e){
     report('ERROR','!! ERROR: audio.js playAudio() [' + e.message + ']');
@@ -101,7 +97,7 @@ function cordovaMediaGetCurrentPositionError(e) {
 /* --------------------------------------- */
 function processAudioPosition(position,duration){
  if(!duration) duration = audioElement.getDuration();
- report('TEST','--> processAudioPosition(pos:' + parseInt(position) + ',dur:' + duration + ')...');
+ report('TEST','[CMP].processAudioPosition(pos:' + parseInt(position) + ',dur:' + duration + ')...');
   try{
     if (parseInt(position) > 0){ //-1) {
       if(currentMediaAlreadyLoaded && currentMediaPaused) return;
@@ -133,13 +129,11 @@ function pauseAudio() {
     audioElement.pause();
   }
 
-
 }
 
 /* --------------------------------------- */
 function resumeAudio() {
   if (audioElement) {
-    // alert('calling RESUME .play() on audio...');
     audioElement.play();
   }
   if(typeof(_mediaPlaybackHasStarted) == 'function') _mediaPlaybackHasStarted();
@@ -178,23 +172,20 @@ function onError(error) {
 
 /* --------------------------------------- */
 function refreshMediaPositionLabel(labelString) {
-  $('#media_status_or_position').html(labelString);
-console.log('Media Label Change [' + labelString + ']'); //document.getElementById('media_status_or_position').innerHTML = position;
+  $('#cmp_status_or_position').html(labelString);
+console.log('Media Label Change [' + labelString + ']');
 }
-
-
-
 
 
 
 /* ----------------------------------------------------------- */
 function initMediaPlayerForAudio(audioTitle,audioPath,audioThumbPath,audioDesc){
-  report('TEST','--> initMediaPlayerForAudio(audioPath:' + audioPath + ')..');
+  report('TEST','[CMP].initMediaPlayerForAudio(audioPath:' + audioPath + ')..');
   try{
 
-    closeMediaPlayer();
+    _closeMediaPlayer();
 
-    $('#cordova_media_player')
+    $('#cordova_mediaplayer')
       .removeClass('playing disabled');
 
     // VARS
@@ -202,9 +193,9 @@ function initMediaPlayerForAudio(audioTitle,audioPath,audioThumbPath,audioDesc){
     if(!audioDesc) audioDesc = "No audio description provided.";
     var audioDesc = audioDesc;
 
-    $('#cordova_media_player').removeClass('video').addClass('audio');
-    $('#cordova_media_player_header h1').html(audioTitle);
-    $('#cordova_media_player #cordova_media_player_desc').html(audioDesc);
+    $('#cordova_mediaplayer').removeClass('video').addClass('audio');
+    $('#cmp_header h1').html(audioTitle);
+    $('#cordova_mediaplayer #cmp_desc').html(audioDesc);
     $('#media_details').show();
 
 
@@ -213,7 +204,7 @@ function initMediaPlayerForAudio(audioTitle,audioPath,audioThumbPath,audioDesc){
                                   ' audio_path="' + audioPath  + '" ' +// '?cachedID=' + cacheVersionID + '" ' +
                                   ' src="' + audioPath + '" ' + //'?cachedID=' + cacheVersionID + '" ' +
                                   ' preload="auto" class="jp-audio" type="audio/mp3"/>';
-    $('#cordova_media_player_elements').append(_audioTagHTML);
+    $('#cmp_media_container').append(_audioTagHTML);
 
     initMediaLoading('AUDIO',audioPath,audioThumbPath);
 
@@ -224,29 +215,16 @@ function initMediaPlayerForAudio(audioTitle,audioPath,audioThumbPath,audioDesc){
 
 
 
-
-
-
-/* ===================== SHARED AUDIO/VIDEO STUFF ===================== */
-
-
-
-
-
-/* ===================== VIDEO SPECIFIC STUFF ===================== */
-
-
-
 /* ----------------------------------------------------------- */
 function initMediaPlayerForVideo(videoTitle,videoPath,videoThumbPath,videoDesc){
-  report('TEST','--> initMediaPlayerForVideo(videoPath:' + videoPath + ')..');
+  report('TEST','[CMP].initMediaPlayerForVideo(videoPath:' + videoPath + ')..');
   try{
 
-    closeMediaPlayer();
+    _closeMediaPlayer();
 
     // REFRESH UI
 
-    $('#cordova_media_player,#media_playpause').removeClass('playing disabled');
+    $('#cordova_mediaplayer,#media_playpause').removeClass('playing disabled');
     $('#audio_item,#media_loading_msg').hide();
 
     // VARS
@@ -254,15 +232,15 @@ function initMediaPlayerForVideo(videoTitle,videoPath,videoThumbPath,videoDesc){
     if(!videoDesc) videoDesc = "No video description provided.";
     var videoDesc = videoDesc;
 
-    $('#cordova_media_player').removeClass('audio').addClass('video');
-    $('#cordova_media_player_header h1').html(videoTitle);
-    $('#cordova_media_player #cordova_media_player_desc').html(videoDesc);
+    $('#cordova_mediaplayer').removeClass('audio').addClass('video');
+    $('#cmp_header h1').html(videoTitle);
+    $('#cordova_mediaplayer #cmp_desc').html(videoDesc);
     $('#media_details').show();
 
     // Remove and Re-Append <video> tag each time
     var _videoTagHTML = '<video id="app_video" type="video/mp4" video_path="' + videoPath + '"/>'; //class="media_controls"
     $('#app_video').remove();
-    $('#cordova_media_player_elements').append(_videoTagHTML);
+    $('#cmp_media_container').append(_videoTagHTML);
 
     if(isMobile.Android()){
       // ANDROID: provide the src on the <video> tag
@@ -287,10 +265,10 @@ function initMediaPlayerForVideo(videoTitle,videoPath,videoThumbPath,videoDesc){
 
 
 /* ----------------------------------------------------------- /
-  prepUIElementsForMediaPlayback
+  _prepUIElementsForMediaPlayback
 / ----------------------------------------------------------- */
-function prepUIElementsForMediaPlayback(){
-  report('TEST','--> prepUIElementsForMediaPlayback()..');
+function _prepUIElementsForMediaPlayback(){
+  report('TEST','[CMP]._prepUIElementsForMediaPlayback()..');
   try{
 
     // $('#app_media_thumb').css('backgroundImage','url(' + currentMediaThumbPath + ')');
@@ -299,9 +277,9 @@ function prepUIElementsForMediaPlayback(){
     var _appMediaThumbWidth = Math.round(window.innerWidth*.90); //$('#app_media_thumb').width();
 
     // DETAILS BOX HEIGHT
-    $("#cordova_media_player")//  ;;_elements")
-      .css("height",_appMediaThumbHeight+"px")
-      .css("width",_appMediaThumbWidth+"px");
+    // $("#cordova_mediaplayer")//  ;;_elements")
+    //   .css("height",_appMediaThumbHeight+"px")
+    //   .css("width",_appMediaThumbWidth+"px");
 
     // update the click/touch event on video play/pause button
     $('#media_playpause')
@@ -312,10 +290,12 @@ function prepUIElementsForMediaPlayback(){
       });
 
     // Then remove loading class we're done!
-    $('#cordova_media_player').removeClass('loading');
+    $('#cordova_mediaplayer').removeClass('loading');
+
+    if(typeof(prepUIElementsForMediaPlayback) == 'function') prepUIElementsForMediaPlayback();
 
 
-  }catch(e){ catchError('prepUIElementsForMediaPlayback()',e); }
+  }catch(e){ catchError('_prepUIElementsForMediaPlayback()',e); }
 }
 
 
@@ -340,7 +320,7 @@ function toggleMediaPlayback(forceMode){
       // ===== VIDEO ====================================
 
       case 'VIDEO':
-        report('TEST','-->  toggleMediaPlayback(VIDEO)..');
+        report('TEST','[CMP]. toggleMediaPlayback(VIDEO)..');
 
         var video = document.getElementById("app_video");
         // var _paused = ((isMediaPlayerPaused(video)) || (forceMode == 'PAUSED'));
@@ -365,7 +345,7 @@ function toggleMediaPlayback(forceMode){
           report('TEST','\t ... VIDEO was NOT paused ... trying to PAUSE ');
           currentMediaPlaying = true;
           currentMediaPaused = true;
-          $('#cordova_media_player').removeClass('playing').addClass('paused');
+          $('#cordova_mediaplayer').removeClass('playing').addClass('paused');
           video.pause();
         }
         break;
@@ -373,7 +353,7 @@ function toggleMediaPlayback(forceMode){
 
       // ===== AUDIO ==============================
       case 'AUDIO':
-        report('TEST','--> toggleMediaPlayback(AUDIO)..'); // report('TEST','** AUDIO: paused=' + _paused + ' | currentMediaPaused:' + currentMediaPaused + ' | currentMediaPlaying:' + currentMediaPlaying + '|');
+        report('TEST','[CMP].toggleMediaPlayback(AUDIO)..'); // report('TEST','** AUDIO: paused=' + _paused + ' | currentMediaPaused:' + currentMediaPaused + ' | currentMediaPlaying:' + currentMediaPlaying + '|');
 
         if(currentMediaPaused){
           report('TEST','\t ... AUDIO WAS paused ... trying to PLAY ');
@@ -410,7 +390,7 @@ function toggleMediaPlayback(forceMode){
   _mediaPlaybackHasBeenStopped
 / ----------------------------------------------------------- */
 function _mediaPlaybackHasBeenStopped(){
-  report('TEST','--> _mediaPlaybackHasBeenStopped()..');
+  report('TEST','[CMP]._mediaPlaybackHasBeenStopped()..');
   try{
 
       if(typeof(currentMediaAlreadyLoaded) == 'undefined'){
@@ -428,7 +408,7 @@ function _mediaPlaybackHasBeenStopped(){
         initMediaPlayerBuffering('END');
       }
 
-      $('#cordova_media_player')
+      $('#cordova_mediaplayer')
         .removeClass('playing')
         .addClass('paused');
 
@@ -443,7 +423,7 @@ function _mediaPlaybackHasBeenStopped(){
   _mediaPlaybackHasStarted
 / ----------------------------------------------------------- */
 function _mediaPlaybackHasStarted(){
-  report('TEST','--> _mediaPlaybackHasStarted().. [currentMediaAlreadyLoaded:' + currentMediaAlreadyLoaded + ' | currentMediaPlaying:' + currentMediaPlaying + ']');
+  report('TEST','[CMP]._mediaPlaybackHasStarted().. [currentMediaAlreadyLoaded:' + currentMediaAlreadyLoaded + ' | currentMediaPlaying:' + currentMediaPlaying + ']');
   try{
       //only run if one of main vars is false
       if(!currentMediaAlreadyLoaded || !currentMediaPlaying){
@@ -456,7 +436,18 @@ function _mediaPlaybackHasStarted(){
         initMediaPlayerBuffering('END');
 
 
-        $('#cordova_media_player').removeClass('paused').addClass('playing');
+        if(!cordovaIsLoaded){
+          // css flag so we know when we're not in device playback mode
+          $('#cordova_mediaplayer').addClass('playing_non_device_mode');
+        }else{
+          // reset play/pause button on devices
+          $('#cordova_mediaplayer').removeClass('playing').addClass('paused');
+          currentMediaAlreadyLoaded = false;
+          currentMediaPlaying = false;
+          currentMediaPaused = false;
+        }
+
+        $('#cordova_mediaplayer').removeClass('paused').addClass('playing');
       }
 
       if(typeof(mediaPlaybackHasStarted) == 'function') mediaPlaybackHasStarted();
@@ -469,13 +460,13 @@ function _mediaPlaybackHasStarted(){
   mediaPlaybackHasBeenPaused
 / ----------------------------------------------------------- */
 function mediaPlaybackHasBeenPaused(){
-  report('TEST','--> mediaPlaybackHasBeenPaused()..');
+  report('TEST','[CMP].mediaPlaybackHasBeenPaused()..');
   try{
 
       currentMediaPlaying = false;
       currentMediaPaused = true;
 
-      $('#cordova_media_player')
+      $('#cordova_mediaplayer')
         .removeClass('playing loading buffering')
         .addClass('paused');
 
@@ -485,7 +476,7 @@ function mediaPlaybackHasBeenPaused(){
 
 /* ----------------------------------------------------------- */
 function clearAllMediaTimersAndIntervals(){
-  report('TEST','--> clearAllMediaTimersAndIntervals()..');
+  report('TEST','[CMP].clearAllMediaTimersAndIntervals()..');
   try{
     clearIntervalVar(audioPlaybackProgressCheckInterval);
     clearTimeoutVar(delayedAudioPlaybackTimeout);
@@ -507,8 +498,8 @@ function stopVideo(){
 }
 
 /* -------------------------------------- */
-function closeMediaPlayer(){
-  report('TEST','closeMediaPlayer()...');
+function _closeMediaPlayer(){
+  report('TEST','_closeMediaPlayer()...');
 
   stopAudio();
   stopVideo();
@@ -524,21 +515,22 @@ function closeMediaPlayer(){
   // PWreenableAutoLock();
 
   // DOM stuff
-  $('#app_video,#app_audio,#app_media_thumb').remove();
-  $('#cordova_media_player')
-    .removeClass('playing paused video audio buffering');
-  $('#media_status_or_position').html("");
+  $('#app_video,#app_audio').remove();
+  $('#cordova_mediaplayer')
+    .removeClass('playing paused video audio buffering playing_non_device_mode');
+  $('#cmp_status_or_position').html("");
   $("body").removeClass('media_playback_mode');
-  $('#cordova_media_player_header h1').html("");
-  $('#cordova_media_player_desc').html("");
+  $('#cmp_header h1').html("");
+  $('#cmp_desc').html("");
+
+
+  if(typeof(closeMediaPlayer) == 'function') closeMediaPlayer();
 
 }
 
-
-
 /* ----------------------------------------------------------- */
 function initMediaGallery(){
-  report('TEST','--> initMediaGallery()..');
+  report('TEST','[CMP].initMediaGallery()..');
   try{
     initOrUpdatePodcastList();
     initOrUpdateVideoList();
@@ -549,39 +541,80 @@ function initMediaGallery(){
   }catch(e){ catchError('initMediaGallery()',e); }
 }
 
-
-
-
-
 /* ----------------------------------------------------------- */
-function setupCordovaMediaPlayer(){
-  report('TEST','--> setupCordovaMediaPlayer()..');
+function setupCordovaMediaPlayer(playerWidth,playerHeight,defaultTitle, defaultText,defaultThumb){
+  report('TEST','\nCordova Media Player initializing ... [CMP]\n');
+  report('TEST','[CMP].setupCordovaMediaPlayer(playerWidth:' + playerWidth + ',playerHeight:' + playerHeight + ')..');
   try{
 
-    if($('#cordova_media_player')){
+    _defaultText = '';
+    _defaultTitle = '';
+    if(defaultText) _defaultText = defaultText;
+    if(defaultTitle) _defaultTitle = defaultTitle;
+
+    if($('#cordova_mediaplayer')){
+      cmpHeight = 270;
+      cmpWidth = 480;
+      if(playerHeight) cmpHeight = playerHeight;
+      if(playerWidth) cmpWidth = playerWidth;
       var mediaPlayerHTML = "";
-      mediaPlayerHTML += '<div id="player_loading_spinner" class="processing_spinner rotate"></div>' +
-                          '<div id="cordova_media_player_header">' +
+      mediaPlayerHTML += '<div id="cmp_loading_spinner" class="processing_spinner rotate"></div>' +
+                          '<div id="cmp_header">' +
                           '   <div class="label_new"></div>' +
-                          '   <h1></h1>' +
+                          '   <h1>' + _defaultTitle + '</h1>' +
                           '</div>' +
-                          '<div id="cordova_media_player_elements">' +
-                          '   <div id="media_status_or_position"></div>' +
-                          '   <div id="cordova_media_player_controls" class="media_controls ">' +
+                          '<div id="cmp_media_container">' +
+                          ' <div id="app_media_thumb"><img/></div>' +
+                          '   <div id="cmp_status_or_position"></div>' +
+                          '   <div id="cmp_controls" class="media_controls ">' +
                           '       <div id="media_playpause" class="media_button image_icon playpause_button"></div>' +
                           '   </div>' +
-                          '   <div id="cordova_media_player_desc"></div>' +
+                          '   <div id="cmp_media_elements">' +
+                          '   </div>' +
+                          '</div>' +
+                          '<div id="cmp_details">' +
+                          '     <div id="cmp_desc">' + _defaultText + '</div>' +
                           '</div>';
 
-      $('#cordova_media_player').html(mediaPlayerHTML);
+      $('#cordova_mediaplayer')
+        .html(mediaPlayerHTML)
+        .css({
+                'width':cmpWidth + 'px'//,
+                //'height':cmpHeight + 'px'
+            });
+
+      var headerHeight = $('#cmp_header').height();
+      var availableHeight = cmpHeight-headerHeight;
+      var controlsHeight = $('#media_playpause').height();
+      var spinnerHeight = $('#cmp_loading_spinner').height();
+      // alert('a: ' + headerHeight + ', b:' + availableHeight + ', c:' + controlsHeight);
+
+      // base media thumb sizing
+      $('#cmp_media_container').css('height',availableHeight + 'px');
+      $('#app_media_thumb').css({
+                                  'width':cmpWidth + 'px',
+                                  'height':availableHeight + 'px'
+                                });
+
+       // status label position
+       //$('#cmp_status_or_position').css('top',(headerHeight+10) + 'px');
+       // control buttons position
+       $('#cmp_controls').css('top',(availableHeight-(controlsHeight+15)) + 'px');
+       $('#cmp_media_elements').css('top',(availableHeight + 10) + 'px');
+       $('#cmp_loading_spinner').css('top', ((availableHeight/2) + (spinnerHeight/2)) + 'px');
+
+
+        if(defaultThumb) refreshMediaThumbnail(defaultThumb);
+
+
 
       // DEVICE MODE
       // if we're on an actual device, this class will always hide the
       // <video> element since we never actually play it inline in this example
       // project. Note if inline playback is desired this class can be overridden via CSS
-      // such as body.tablet_mode #cordova_media_player.device_mode video { display:block !important; }
+      // such as body.tablet_mode #cordova_mediaplayer.device_mode video { display:block !important; }
       if(cordovaIsLoaded){
-        $('#cordova_media_player').addClass('device_mode');
+        $('#cordova_mediaplayer').addClass('device_mode');
       }
     }
   }catch(e){ catchError('setupCordovaMediaPlayer()',e); }
@@ -590,7 +623,7 @@ function setupCordovaMediaPlayer(){
 
 /* ----------------------------------------------------------- */
 function pauseAllMedia(){
-  report('TEST','--> pauseAllMedia()..');
+  report('TEST','[CMP].pauseAllMedia()..');
   try{
 
   if(currentMediaPlaying){
@@ -619,7 +652,7 @@ function isMediaPlayerPaused(audioOrVideoItem){
 
   }catch(e){ catchError('isMediaPlayerPaused()',e); }
 
-  report('TEST','--> isMediaPlayerPaused()..paused:' + p + '? [_mediaElementIsPaused:' + _mediaElementIsPaused + '], [currentMediaPlaying:' + currentMediaPlaying + '], [currentMediaPaused:' + currentMediaPaused + ']');
+  report('TEST','[CMP].isMediaPlayerPaused()..paused:' + p + '? [_mediaElementIsPaused:' + _mediaElementIsPaused + '], [currentMediaPlaying:' + currentMediaPlaying + '], [currentMediaPaused:' + currentMediaPaused + ']');
   return p;
 }
 
@@ -627,11 +660,11 @@ function isMediaPlayerPaused(audioOrVideoItem){
   initMediaLoading
 / ----------------------------------------------------------- */
 function initMediaLoading(videoOrPodcast,mediaPath,mediaThumbPath){
-  report('TEST','--> initMediaLoading(videoOrPodcast:' + videoOrPodcast + ', mediaPath:' + mediaPath + ', mediaThumbPath:' + mediaThumbPath  + ')..');
+  report('TEST','[CMP].initMediaLoading(videoOrPodcast:' + videoOrPodcast + ', mediaPath:' + mediaPath + ', mediaThumbPath:' + mediaThumbPath  + ')..');
   try{
 
-    $('#cordova_media_player').addClass('loading');
-    $('#cordova_media_player div.label_new').hide();
+    $('#cordova_mediaplayer').addClass('loading');
+    $('#cordova_mediaplayer div.label_new').hide();
     currentMediaPlaying = false;
     currentMediaPaused = true;
     currentMediaAlreadyLoaded = false;
@@ -639,24 +672,32 @@ function initMediaLoading(videoOrPodcast,mediaPath,mediaThumbPath){
     currentMediaThumbPath = mediaThumbPath;
 
     // MEDIA THUMB
-    var _mediaThumbDiv = '<div id="app_media_thumb"><img/></div>';
-    $('#app_media_thumb').remove();
-    $('#cordova_media_player_elements').prepend(_mediaThumbDiv);
+    $('#app_media_thumb').css('background-image','none');
+    $('#cordova_mediaplayer').addClass('loading');
 
-    $('#cordova_media_player').addClass('loading');
-
-    $('#app_media_thumb img')
-      .attr('src',currentMediaThumbPath)
-      .load(function(){
-        prepUIElementsForMediaPlayback();
-      });
+    refreshMediaThumbnail(currentMediaThumbPath,_prepUIElementsForMediaPlayback);
 
   }catch(e){ catchError('initMediaLoading()',e); }
 }
 
 
+function refreshMediaThumbnail(thumbPath,postThumbLoadCallback){
+
+  try{
+
+    $('<img/>').attr('src', thumbPath).load(function() {
+       $(this).remove();
+       $('#app_media_thumb').css({'background-image':'url(' + thumbPath + ')'});
+       // run callback after loading finished if desired
+       if(postThumbLoadCallback) postThumbLoadCallback();
+    });
+
+  }catch(e){ catchError('refreshMediaThumbnail()',e); }
+
+}
+
 function initMediaPlayerBuffering(startOrEnd){
-  report('TEST','--> initMediaPlayerBuffering(' + startOrEnd + ')...');
+  report('TEST','[CMP].initMediaPlayerBuffering(' + startOrEnd + ')...');
   try{
 
     $('#media_playpause').empty();
@@ -664,15 +705,15 @@ function initMediaPlayerBuffering(startOrEnd){
     switch(startOrEnd){
       case 'START':
         refreshMediaPositionLabel("Loading...");
-        $('#cordova_media_player').addClass('buffering');
+        $('#cordova_mediaplayer').addClass('buffering');
         $('#media_playpause')
           .append('<div class="processing_spinner rotate">');
         break;
 
       case 'END':
       default:
-        $('#cordova_media_player .media_button .processing_spinner').remove();
-        $('#cordova_media_player').removeClass('buffering');
+        $('#cordova_mediaplayer .media_button .processing_spinner').remove();
+        $('#cordova_mediaplayer').removeClass('buffering');
         clearIntervalVar(delayedVideoPlaybackInterval);
         clearTimeoutVar(delayedAudioPlaybackTimeout);
         break;
@@ -686,12 +727,11 @@ function androidLocalVideoPlaybackMethodRequired(){
   if(!isMobile.Android()) return false;
   var isRequired = false;
   try{
-    // isRequired = ((isMobile.Android()) && (currentMediaPath.toLowerCase().indexOf('android_asset/',0) > -1));
-    isRequired = ((isMobile.Android())); // && (currentMediaPath.toLowerCase().indexOf('android_asset/',0) > -1));
+    isRequired = ((isMobile.Android()));
   }catch(e){
     catchError('androidLocalVideoPlaybackMethodRequired()',e);
   }
-  report('TEST','--> androidLocalVideoPlaybackMethodRequired() [' + isRequired + ']');
+  report('TEST','[CMP].androidLocalVideoPlaybackMethodRequired() [' + isRequired + ']');
   return isRequired;
 }
 
@@ -703,18 +743,16 @@ function playVideo(){
 
   try{
 
-    //if(!currentMediaAlreadyLoaded){
       // stop existing video?
-      report('TEST','--> playVideo() [currentMediaPath:' + currentMediaPath + ']');
+      report('TEST','[CMP].playVideo() [currentMediaPath:' + currentMediaPath + ']');
 
       var video = document.getElementById("app_video");
       initMediaPlayerBuffering('START');
       clearIntervalVar(delayedVideoPlaybackInterval);
 
-      // alert('pausing video after 1st .play() call..');
       if(androidLocalVideoPlaybackMethodRequired()){
         window.plugins.videoPlayer.play(currentMediaPath);
-        initMediaPlayerBuffering('END'); // _mediaPlaybackHasStarted();
+        initMediaPlayerBuffering('END');
         return true;
       }else{
         // OTHERWISE CONTINUE
@@ -730,7 +768,7 @@ function playVideo(){
           // we tried
         }
 
-        report('TEST','playVideo() --> video play interval: readyState=[' + video.readyState + '] seek=[' + seek + '] androidLocalVideoPlaybackMethodRequired=[' + androidLocalVideoPlaybackMethodRequired() + ']');
+        report('TEST','playVideo() [CMP].video play interval: readyState=[' + video.readyState + '] seek=[' + seek + '] androidLocalVideoPlaybackMethodRequired=[' + androidLocalVideoPlaybackMethodRequired() + ']');
         var videoReadyForPlayback = (
                                       (parseInt(video.readyState) >= 3) ||
                                       ((seek > 30) && (parseInt(seek) != 6000)) ||
@@ -739,7 +777,7 @@ function playVideo(){
 
 
         if(videoReadyForPlayback){
-          report('TEST','\t... READY FOR PLAYBACK(?) [playVideo() --> video.play()]');
+          report('TEST','\t... READY FOR PLAYBACK(?) [playVideo() [CMP].video.play()]');
 
           _mediaPlaybackHasStarted();
 
@@ -753,11 +791,11 @@ function playVideo(){
           }
 
         }else{
-          report('TEST','\t... playVideo() --> buffering...');
+          report('TEST','\t... playVideo() [CMP].buffering...');
           // keep waiting...
         }
       },2000);
-   // }
+
 
   }catch(e){ catchError('playVideo()',e); }
 

@@ -3,7 +3,7 @@ cordova-mediaplayer-core
 
 # Summary
 
-The core functionality behind the "[Cordova-MediaPlayer](dfdf)" project.
+The core functionality behind the "[Cordova-MediaPlayer](https://github.com/cemerson/Cordova-MediaPlayer)" project.
 
 # Usage
 
@@ -12,6 +12,7 @@ To use "Cordova-MediaPlayer" in your Cordova app project:
 Add following to your index.html <head>
 
     <link rel="stylesheet" type="text/css" href="js/cordova-mediaplayer/cordova-mediaplayer.css" />
+    (Optional) <link rel="stylesheet" type="text/css" href="js/cordova-mediaplayer/cordova-mediaplayer-theme.css" />
 
 Add following to your index.html <body>
 
@@ -20,7 +21,11 @@ Add following to your index.html <body>
 
 Call this method on your body load (or similar) event:
 
-    setupCordovaMediaPlayer();
+    setupCordovaMediaPlayer(playerWidth,playerHeight,defaultTitle, defaultText,defaultThumb);
+
+Example:
+
+    setupCordovaMediaPlayer(320,240,'Cordova Media Player','Hello world.','images/player_background.png');
 
 Then call the following methods as needed:
 
@@ -51,3 +56,14 @@ Examples:
 Confirm you have the related "[common/js](https://github.com/cemerson/common)" repo loaded in your project as well
 
 If you have problems or questions getting this to work you can see "Cordova-MediaPlayer" in action by cloning and trying out the full test project here: https://github.com/cemerson/Cordova-MediaPlayer
+
+# Optional Methods
+
+If you create methods with any of the following names the cordova mediaplayer will call them at the corresponding moments.
+
+- mediaPlaybackHasBeenStopped()
+- mediaPlaybackHasStarted()
+- closeMediaPlayer()
+- prepUIElementsForMediaPlayback()
+- mediaPlaybackHasBeenPaused()
+

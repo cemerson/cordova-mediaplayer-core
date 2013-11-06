@@ -1,0 +1,38 @@
+/*
+  Example of some CMP css customization
+  Intentionally hideous to show the obvious customization areas
+*/
+#cordova_mediaplayer{
+  background-color:dodgerblue;
+}
+#cmp_header h1{
+    color: #fff;
+    background-color:dodgerblue;
+}
+
+#cmp_header h1, #cmp_media_container{
+  border-bottom:2px solid blue;
+}
+
+#media_playpause{
+  border:2px solid blue;
+}
+
+.video.playing .media_button {
+  background-color: transparent;
+  border: 2px solid dodgerblue; }
+
+#cmp_status_or_position{
+  color: #fff;
+  border: 2px solid blue;
+  background-color: dodgerblue;
+}
+
+.video.playing.device_mode .media_button,
+.media_button{
+  background-color: dodgerblue;
+}
+
+#cmp_desc{
+  color:#fff;
+}

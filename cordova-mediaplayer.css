@@ -1,118 +1,39 @@
-.audio #cordova_media_player_desc,
-.video #cordova_media_player_desc{
+/* cordova-mediaplayer.css */
+
+.audio #cmp_desc,
+.video #cmp_desc{
   display:block;
 }
 
-.device_mode.playing #cordova_media_player_desc{
+.device_mode.playing #cmp_desc{
   display:block !important;
 }
 
-.playing #cordova_media_player_desc{
+.playing #cmp_desc{
   display:none !important;
 }
 
-#cordova_media_player_desc{
-  display:none;
-  position:absolute;
-  top:0;
-  font-size: 1.2em;
-  text-transform:none;
-  background-color: rgba(0,0,0,0.7);
-  padding: 0px 5%;
-  text-align:left;
-  height: 70%;
-  padding-top: 15%;
-  width: 90%;
-}
-
-#cordova_media_player {
+#cordova_mediaplayer {
   position: relative;
-  color: white;
-  border: 1px solid #666;
-  margin: 20px auto 5px;
-  max-width: 480px;
-  max-height: 240px;
-  background-color: transparent;  
-  height: auto;
-  width: 480px;
-  height: 240px;
 }
-
-
-#cordova_media_player.playing, #cordova_media_player.loading{
-  background-color:#000;
-  border: 1px solid #999;
-}
-
-#cordova_media_player.playing #cordova_media_player_header,
-#cordova_media_player.loading #cordova_media_player_header{
-  color:#555;
-}
-
-#cordova_media_player.playing #cordova_media_player_header h1,
-#cordova_media_player.loading #cordova_media_player_header h1{
-  font-size:12px !important;
-  line-height:2em;
-  font-weight:normal;
-  background-color: rgba(0,0,0,0.6);
-  height:25px;
-  margin-top:0 !important;
-  top:0px !important;
-  color: #fff;
-}
-
 
 #app_video {
-  width: auto;
-  height: 100%;
-  position: relative;
   display:none;
-  margin: auto 0;
-
-  /* This is the key to vertical centering */
-  margin:auto auto;
-  position: absolute;
-  top: 0; bottom: 0;
-  left: 0; right: 0;
-
 }
 
-#cordova_media_player.buffering .processing_spinner {
+.buffering #media_playpause .processing_spinner {
   display: block !important;
   opacity: 1.0 !important;
-  position: absolute !important;
-  top: 2px !important;
-  left: 14px !important; }
+}
 
-#cordova_media_player.buffering #media_playpause {
-  background-image: none !important;
-  pointer-events: none !important;
+#cordova_mediaplayer.buffering #media_playpause {
   cursor: not-allowed !important;
   opacity: 1; }
 
 
 .media_button {
-  background-color: rgba(0,0,0,0.2) !important;
-  border: 2px solid #fff;
-  background-repeat: no-repeat;
-  border-radius: 25px;
-  border-radius: 11px;
-  padding: 2px;
-  font-size: 1.7em;
-  text-align: center;
-  line-height: 56px;
-  font-family: "FGCBI","Helvetica Neue",sans-serif;
   pointer-events:auto !important;
-
-  }
-
-#media_playpause {
-  left: 15px;
-  position: absolute;
 }
-
-#media_playpause, .paused #media_playpause {
-  background-position: 15px -1289px; }
 
 .video #media_playpause,
 .device_mode.playing #media_playpause,
@@ -120,50 +41,20 @@
 .buffering #media_playpause{
   display: block !important; }
 
-/* .device_mode.video.playing #media_playpause,
-.device_mode.video.paused #media_playpause{
-  display:none !important;
-}
- */
-
 .video.playing #app_video{
   display: table;}
 
-/* unless you want #app_video to play inline (iOS) hide
-  #app_video and always show thumb when not playing #app_video fullscreen.
-  When testing in browser this device_mode class will not be present
-  so the #app_video will play inline automatically
-*/
 .device_mode #app_video{
-  /*width:0 !important;
-  height:0 !important;
-  display:none !important;
-  */
   left:-2000px !important;
   top:-2000px !important;
 }
 
-.playing #media_playpause {
-  background-position: 15px -1346px !important; }
-
 .media_button:active{
-  background-color:rgba(0,0,0,0.85) !important;
   opacity:1 !important;
-  color:#fff;
 }
 
 #media_playpause{
-  opacity: 0.8;
-  bottom: 10px !important;
-  text-indent: 1000px;
-  width: 55px !important;
-  height: 55px !important;
-  background-position: 15px -1289px;
   cursor: pointer;
-  left: 11px;
-  height: 59px;
-  z-index: 201;
-  height: 40px;
   -webkit-user-select:auto !important;
   pointer-events:auto !important;
 }
@@ -176,59 +67,29 @@
 .paused #media_playpause,
 .playing #media_playpause,
 .buffering #media_playpause{
-  display:block;
+  display: inline-block;
 }
 
 .playing #media_playpause{
-  background-position: 15px -1345px !important;
   opacity: 0.5; }
 
-/*#audio_playpause, .paused #audio_playpause.paused {
-  z-index: 204; }
-*/
-/*#audio_playpause.playing {
-  background-position: 12% 19px; }
-*/
-/*#audio_playpause, #audio_restart {
-  height: 45px !important;
-  line-height: 1.6em; }
-*/
 .audio.playing #media_playpause,
 .audio #media_playpause,
 .audio.paused #media_playpause {
-  display: block; }
+  display: inline-block; }
 
-.buffering #media_status_or_position {
-  color: #fff; /*rgba(255,255,255,.3); */
-  }
-
-
-.playing.audio #media_status_or_position,
-.loading #media_status_or_position,
-.buffering #media_status_or_position{
+.playing.audio #cmp_status_or_position,
+.loading #cmp_status_or_position,
+.buffering #cmp_status_or_position{
   display:block;
 }
 .playing #media_playpause,
-.playing #media_status_or_position{
+.playing #cmp_status_or_position{
   opacity: 1;
-  background-color: rgba(0,0,0,0.5);
 }
 
-#media_status_or_position {
+#cmp_status_or_position {
   display:none;
-  font-family: FGCBI,"Helvetica Neue",sans-serif;
-  position: absolute;
-  z-index: 1;
-  bottom: 12px;
-  right: 10px;
-  font-size: 11px;
-  color: #fff;
-  border: 2px solid #fff;
-  text-align: center;
-  padding: 4px 15px;
-  border-radius: 6px;
-  font-weight: bold;
-  width: 70px;
   opacity:1;
 }
 
@@ -241,28 +102,13 @@ body.tablet_mode .paused.device_mode #app_video,
 body.tablet_mode .playing.device_mode #app_video{
   display: block !important; }
 
-#cordova_media_player_header{
-  position:absolute;
-  top:0px;
-  width:100%;
-  padding:10px 0;
-  z-index: 3;
-}
-
-.loading #cordova_media_player_header,
-.playing #cordova_media_player_header{
-  padding:0;
-}
-
-#cordova_media_player.loading #cordova_media_player_header,
-#cordova_media_player.loading #cordova_media_player_header *,
-#cordova_media_player.loading .processing_spinner {
+#cordova_mediaplayer.loading #cmp_header,
+#cordova_mediaplayer.loading #cmp_header *,
+#cordova_mediaplayer.loading .processing_spinner {
   opacity: 1; }
 
-
-#cordova_media_player.loading #cordova_media_player_elements,
-/*#cordova_media_player.loading .media_button,*/
-#cordova_media_player.loading #media_details{
+#cordova_mediaplayer.loading #cmp_media_container *,
+#cordova_mediaplayer.loading #media_details{
   opacity:0 !important;
 }
 
@@ -272,63 +118,199 @@ body.tablet_mode .playing.device_mode #app_video{
   background-position: 6px 2000px;
   background-repeat: no-repeat; }
 
-
-/*body.tablet_mode #cordova_media_player.device_mode #app_video,
-body.tablet_mode #cordova_media_player.paused.device_mode #app_video{
-  display: none !important; }
-
-body.tablet_mode #cordova_media_player.playing.device_mode #app_video{
-  display: block !important; }*/
-
-.playing .playpause {
-  background-position: 15px -1344px !important; }
-
-.video.playing .media_button {
-  background-color: transparent !important;
-  border: 2px solid rgba(255, 255, 255, 0.5); }
-
 .video.playing .media_button {
   opacity: .7; }
 
-#cordova_media_player.video.playing #app_media_thumb,
-.video.paused #app_video {
+#cordova_mediaplayer.device_mode.video.playing #app_media_thumb,
+#cordova_mediaplayer.video.paused #app_media_thumb,
+.video.playing #app_video,
+#cordova_mediaplayer.playing_non_device_mode.video.paused #app_video{
+  display: block }
+
+#cordova_mediaplayer.playing_non_device_mode.video.paused #app_media_thumb,
+body.tablet_mode #cordova_mediaplayer.device_mode.video.playing #app_media_thumb{
   display: none !important; }
 
-#cordova_media_player.device_mode.video.playing #app_media_thumb,
-#cordova_media_player.video.paused #app_media_thumb,
-.video.playing #app_video {
-  display: block !important; }
+.loading #cmp_loading_spinner{
+  display: block !important;
+  opacity: 1.0 !important;
+}
 
-body.tablet_mode #cordova_media_player.device_mode.video.playing #app_media_thumb{
-  display: none !important; }
-
-#player_loading_spinner{
+#cmp_loading_spinner{
   display:none;
 }
 
-.loading #player_loading_spinner{
-margin-top: 100px !important;
+#cmp_loading_spinner{
+  margin:0 !important;
+}
+.loading #cmp_loading_spinner{
 display:block;
 }
 
-#cordova_media_player.loading .processing_spinner{
+#cordova_mediaplayer.loading .processing_spinner{
   display:block;
 }
-#cordova_media_player .processing_spinner{
-/*   margin-top:120px; */
-  display: none;
+#cordova_mediaplayer .processing_spinner{
+display: none;
 }
+
+#cordova_mediaplayer .processing_spinner {
+  pointer-events: none;
+}
+
+.video.playing #cmp_controls{
+  display:none;
+}
+
+#cmp_controls{
+  position:absolute;
+  left: 15px;
+}
+
+#cmp_header h1{
+  white-space:nowrap;
+}
+
+#cmp_details{
+  height:100%;
+}
+
+#cmp_media_container{
+overflow: hidden;
+position: relative;
+background-color: #444;
+}
+
+.video #cmp_media_container{
+background-color: #000;
+}
+
+
+#app_media_thumb img{
+  opacity: 1;
+  width: 100%;
+  height: auto;
+}
+#app_media_thumb{
+  overflow: hidden;
+  width:100%;
+  height:auto;
+  background-size: auto 100%;
+  background-repeat: no-repeat;
+  background-position: center;
+  opacity: .4;
+}
+
+#cordova_mediaplayer.video #app_media_thumb,
+#cordova_mediaplayer.audio #app_media_thumb{
+  opacity:1;
+}
+
+
+#cordova_mediaplayer.playing_non_device_mode.video.playing #app_media_thumb,
+#cordova_mediaplayer.playing_non_device_mode
+playing_non_device_mode.audio.playing #app_media_thumb{
+  display:none;
+}
+
+
+/* LAYOUT/VISBILITY */
+#cordova_mediaplayer .processing_spinner{
+  position: absolute !important;
+  z-index: 10;
+}
+#cordova_mediaplayer.buffering .processing_spinner {
+  left: 17px;
+  top: 3px;
+}
+
+#cordova_mediaplayer.buffering #media_playpause {
+  background-image: none !important;
+}
+
+.media_button {
+  background-repeat: no-repeat;
+  border-radius: 25px;
+  border-radius: 11px;
+  padding: 2px;
+  font-size: 1.7em;
+  text-align: center;
+  line-height: 56px;
+  font-family: "FGCBI","Helvetica Neue",sans-serif;
+  pointer-events:auto !important;
+
+  }
+
+#media_playpause, .paused #media_playpause {
+  background-position: 15px -1289px; }
+
+.media_button:active{
+  background-color:rgba(0,0,0,0.85) !important;
+  color:#fff;
+}
+
+.video.device_mode.playing #media_playpause,
+#media_playpause{
+  width: 55px !important;
+  height: 55px !important;
+  background-position: 15px -1289px !important;
+  cursor: pointer;
+}
+
+.playing #media_playpause{
+  background-position: 15px -1345px !important;
+}
+
+#cmp_status_or_position {
+  font-family: FGCBI,"Helvetica Neue",sans-serif;
+  z-index: 1;
+  font-size: 1em;
+  text-align: center;
+  padding: 4px 15px;
+  border-radius: 6px;
+  font-weight: bold;
+  width: auto;
+  position: absolute;
+  right: 15px;
+  top: 10px;
+}
+
+
+#app_video {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  margin:auto 0px;
+}
+
+
+.loading #cmp_header,
+.playing #cmp_header{
+  padding:0;
+}
+
+.image_icon {
+  background-size: 28px 1784px !important;
+  background-image: url(images/icons/buttons@2X.png);
+  background-position: 6px 2000px;
+  background-repeat: no-repeat; }
+
+.playing .playpause {
+  background-position: 15px -1344px !important; }
 
 .loading #media_playpause{
   background-image:none;
 }
 
-#cordova_media_player .processing_spinner {
+#cmp_loading_spinner{
+  left:45% !important;
+}
+
+#cordova_mediaplayer .processing_spinner {
   background-image: url(images/icons/spinner_white@2X.png);
   background-position: center center;
   background-size: 30px 30px;
   height: 30px;
-  pointer-events: none;
   width: 30px;
   margin: 12px auto 10px; }
 
@@ -341,43 +323,45 @@ display:block;
   to {
     -webkit-transform: rotate(360deg); } }
 
-
-#cordova_media_player_elements{
-width:100%;
-
-height: 100%;
-/*
-
-
-width:480px;
-  height:250px; */
-
-  position:absolute;
-max-width: 480px;
-top: 0px;
-overflow: hidden;
+#cmp_desc{
+  width:90%;
+  margin:5px auto 0;
+  font-size:1.25em;
+  line-height:1.4em;
 }
-#app_media_thumb img{
-  opacity: 1;
-  width: 100%;
+
+
+
+/* DEFAULT STYLES (minimal) */
+#cordova_mediaplayer{
+  width: 400px;
   height: auto;
-}
-#app_media_thumb{
-  width:100%;
-  height: 100%;
-  margin: 0;
-  background-size: auto 100% !important;
-  background-position: center center  !important;
-  background-repeat: no-repeat;
-  background-color: #000;
-  overflow: hidden;
+  margin: 0 auto;
 }
 
+#cmp_header h1{
+    color: #444;
+}
 
-/* phone layout */
- @media screen and (max-width:580px) {
-    #cordova_media_player{
-        width:95% !important;
-        height:230px !important;
-    }
+#cmp_header h1, #cmp_media_container{
+  border-bottom:2px solid #222;
+}
+
+#media_playpause{
+  border:2px solid #999;
+}
+
+.video.playing .media_button {
+  background-color: transparent;
+  border: 2px solid rgba(255, 255, 255, 0.5); }
+
+#cmp_status_or_position{
+  color: #222;
+  border: 2px solid #222;
+  background-color: #fff;
+}
+
+.video.playing.device_mode .media_button,
+.media_button{
+  background-color: #222;
 }
