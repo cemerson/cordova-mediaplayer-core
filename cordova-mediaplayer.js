@@ -599,7 +599,7 @@ function setupCordovaMediaPlayer(playerWidth,playerHeight,defaultTitle, defaultT
        // status label position
        //$('#cmp_status_or_position').css('top',(headerHeight+10) + 'px');
        // control buttons position
-       $('#cmp_controls').css('top',(availableHeight-(controlsHeight+15)) + 'px');
+       $('#cmp_controls').css('top',(availableHeight-(controlsHeight+20)) + 'px');
        $('#cmp_media_elements').css('top',(availableHeight + 10) + 'px');
        $('#cmp_loading_spinner').css('top', ((availableHeight/2) + (spinnerHeight/2)) + 'px');
 
