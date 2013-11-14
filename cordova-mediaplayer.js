@@ -9,7 +9,7 @@ var currentMediaPlaying = false;          // ...
 var delayedAudioPlaybackTimeout;          // ...
 var delayedVideoPlaybackInterval;
 var cmpHeight, cmpWidth;
-
+var termLoading = "Loading";
 // unused for now:
 // var videoFileExt = "m4v"; // iOS
 // if(isMobile.Android()) videoFileExt = "mp4";
@@ -704,7 +704,7 @@ function initMediaPlayerBuffering(startOrEnd){
 
     switch(startOrEnd){
       case 'START':
-        refreshMediaPositionLabel("Loading...");
+        refreshMediaPositionLabel(termLoading + " ...");
         $('#cordova_mediaplayer').addClass('buffering');
         $('#media_playpause')
           .append('<div class="processing_spinner rotate">');
